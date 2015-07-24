@@ -10,8 +10,6 @@
 
 (enable-console-print!)
 
-(println "Hello world!")
-
 (def app-state
   (atom {:classes []
          :num-points 21
