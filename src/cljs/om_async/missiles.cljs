@@ -19,7 +19,7 @@
                               width 1000]
                           (apply dom/svg #js {:height height :width width :className "graph"}
                                  (for [i (range (:num-points data))]
-                                   (let [f (fn [x] (* 30 (.sin js/Math x)))
+                                   (let [f (fn [x] (* (/ height 3) (.sin js/Math x)))
                                          dx (/ width (:num-points data))
                                          x1 (* i dx)
                                          x2 (+ x1 dx)
