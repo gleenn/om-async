@@ -14,7 +14,7 @@
 
 (def app-state
   (atom {:classes []
-         :num-points 1
+         :num-points 21
          :points []}))
 
 (def ^:private meths
