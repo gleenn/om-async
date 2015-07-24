@@ -3,22 +3,33 @@
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
 
-(defn classes-view [data owner]
+
+(defn line [x1 y1 x2 y2]
+  (dom/line #js {:className "line" :x1 (str x1) :y1 (str y1) :x2 (str x2) :y2 (str y2)}))
+
+(defn graph-view [data owner]
   (reify
     om/IRenderState
     (render-state [_ state]
       (dom/div nil
                (dom/h1 nil "Missiles")
-               (dom/h2 nil (str (:missiles data)))
+               (dom/h2 nil (str (:num-points data)))
                (dom/div nil
-                        (dom/svg #js {:height 300 :width 500 :className "graph"}
-                                 (dom/line #js {:className "line" :x1 "0" :y1 "0" :x2 "100" :y2 "150"})))
-               (dom/button #js {:onClick #(om/transact! data :missiles (fn [x] (inc x)))} "Up")
-               (dom/button #js {:onClick #(om/transact! data :missiles (fn [x] (dec x)))} "Down")
+                        (let [height 300
+                              width 500]
+                          (apply dom/svg #js {:height height :width width :className "graph"}
+                                 (for [i (range (:num-points data))]
+                                   (let [f (fn [x] (* 30 (.sin js/Math x)))
+                                         dx 10
+                                         x1 (* i dx)
+                                         x2 (+ x1 dx)
+                                         y1 (+ (/ height 2) (* -1 (f x1)))
+                                         y2 (+ (/ height 2) (* -1 (f x2)))]
+                                     (line x1 y1 x2 y2))))))
+               (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (+ x 10)))} "Up")
+               (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (- x 10)))} "Down")
                ))))
 
 (defn launch [app-state]
-  (do
-    (println app-state)
-    (om/root classes-view app-state
-             {:target (.getElementById js/document "missiles")})))
+  (om/root graph-view app-state
+           {:target (.getElementById js/document "missiles")}))

@@ -14,7 +14,8 @@
 
 (def app-state
   (atom {:classes []
-         :missiles 1}))
+         :num-points 1
+         :points []}))
 
 (def ^:private meths
   {:get "GET"
