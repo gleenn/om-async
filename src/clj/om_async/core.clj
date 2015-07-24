@@ -11,8 +11,8 @@
             [environ.core :refer [env]])
   (:gen-class))
 
-;(def uri "datomic:free://localhost:4334/om_async")
-;(def conn (d/connect uri))
+(def uri "datomic:free://localhost:4334/om_async")
+(def conn (d/connect uri))
 
 (defn index []
   (file-response "public/html/index.html" {:root "resources"}))
@@ -22,34 +22,34 @@
    :headers {"Content-Type" "application/edn"}
    :body    (pr-str data)})
 
-;(defn update-class [id params]
-;  (let [db (d/db conn)
-;        title (:class/title params)
-;        eid (ffirst
-;              (d/q '[:find ?class
-;                     :in $ ?id
-;                     :where
-;                     [?class :class/id ?id]]
-;                   db id))]
-;    (d/transact conn [[:db/add eid :class/title title]])
-;    (generate-response {:status :ok})))
-;
-;(defn classes []
-;  (let [db (d/db conn)
-;        classes
-;        (vec (map #(d/touch (d/entity db (first %)))
-;                  (d/q '[:find ?class
-;                         :where
-;                         [?class :class/id]]
-;                       db)))]
-;    (generate-response classes)))
+(defn update-class [id params]
+  (let [db (d/db conn)
+        title (:class/title params)
+        eid (ffirst
+              (d/q '[:find ?class
+                     :in $ ?id
+                     :where
+                     [?class :class/id ?id]]
+                   db id))]
+    (d/transact conn [[:db/add eid :class/title title]])
+    (generate-response {:status :ok})))
+
+(defn classes []
+  (let [db (d/db conn)
+        classes
+        (vec (map #(d/touch (d/entity db (first %)))
+                  (d/q '[:find ?class
+                         :where
+                         [?class :class/id]]
+                       db)))]
+    (generate-response classes)))
 
 (defroutes routes
            (GET "/" [] (index))
-           ;(GET "/classes" [] (classes))
-           ;(PUT "/class/:id/update"
-           ;     {params :params edn-body :edn-body}
-           ;  (update-class (:id params) edn-body))
+           (GET "/classes" [] (classes))
+           (PUT "/class/:id/update"
+                {params :params edn-body :edn-body}
+             (update-class (:id params) edn-body))
            (route/files "/" {:root "resources/public"}))
 
 (defn read-inputstream-edn [input]

@@ -4,13 +4,13 @@
             [om.dom :as dom :include-macros true]))
 
 
-(defn line [x1 y1 x2 y2]
+(defn- line [x1 y1 x2 y2]
   (dom/line #js {:className "line" :x1 (str x1) :y1 (str y1) :x2 (str x2) :y2 (str y2)}))
 
 (defn graph-view [data owner]
   (reify
     om/IRenderState
-    (render-state [_ state]
+    (render-state [this state]
       (dom/div nil
                (dom/h1 nil "Missiles")
                (dom/h2 nil (str (:num-points data)))
@@ -29,7 +29,3 @@
                (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (+ x 10)))} "Up")
                (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (- x 10)))} "Down")
                ))))
-
-(defn launch [app-state]
-  (om/root graph-view app-state
-           {:target (.getElementById js/document "missiles")}))
