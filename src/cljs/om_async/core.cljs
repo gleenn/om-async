@@ -102,8 +102,8 @@
       om/IRender
       (render [this]
         (dom/div nil
-                (om/build classes-view data)
-                (om/build missiles/graph-view data))
+                 (om/build classes-view data)
+                 (om/build missiles/graph-view data))
         )))
   app-state
   {:target (.getElementById js/document "classes")})

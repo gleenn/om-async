@@ -26,6 +26,6 @@
                                          y1 (+ (/ height 2) (* -1 (f x1)))
                                          y2 (+ (/ height 2) (* -1 (f x2)))]
                                      (line x1 y1 x2 y2))))))
-               (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (+ x 10)))} "Up")
-               (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (- x 10)))} "Down")
+               (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (+ x 1)))} "Up")
+               (dom/button #js {:onClick #(om/transact! data :num-points (fn [x] (- x 1)))} "Down")
                ))))
