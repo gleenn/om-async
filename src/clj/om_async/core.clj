@@ -1,7 +1,7 @@
 (ns om-async.core
   (:require [ring.util.response :refer [file-response]]
             [ring.adapter.jetty :refer [run-jetty]]
-            [compojure.core :refer [defroutes GET PUT]]
+            [compojure.core :refer [defroutes GET PUT POST]]
             [compojure.route :as route]
             [compojure.handler :as handler]
             [clojure.edn :as edn]
@@ -47,7 +47,10 @@
 
 (defroutes routes
            (GET "/" [] (index))
-           (GET "/classes" [] (util/generate-response (classes/all)))
+           (GET "/class" [] (util/generate-response (classes/all)))
+           (POST "/class"
+                 {params :params edn-body :edn-body}
+                 (classes/add-class edn-body))
            (PUT "/class/:id/update"
                 {params :params edn-body :edn-body}
              (classes/update-class (:id params) edn-body))

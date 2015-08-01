@@ -8,11 +8,16 @@
 
 (def url "postgresql://localhost:5432/clojure")
 
+(defn add-class [params]
+  (if-let [id (first (sql/insert! url :classes params))]
+    (util/generate-response {:status :ok :id id})
+    (util/generate-response {:status 400})))
+
 (defn update-class [id params]
   (let [id (Integer/parseInt id)]
     (if-let [class (first (sql/query url ["select * from classes where id = ?" id]))]
-      (if (sql/update! url :classes (dissoc (merge class params) :id) ["id = ?" id])
-        (util/generate-response {:status :ok})
+      (if-let [id (sql/update! url :classes (dissoc (merge class params) :id) ["id = ?" id])]
+        (util/generate-response {:status :ok :id id})
         (util/generate-response {:status 400}))
       (util/generate-response {:status 404}))))
 

@@ -39,14 +39,17 @@
   (om/set-state! owner :editing false)
   (cb text))
 
-(defn on-edit [id title]
+(defn on-edit [data class]
   (edn-xhr
-    {:method :put
-     :url    (str "class/" id "/update")
-     :data   {:title title}
-     :on-complete
-             (fn [res]
-               (println "server response:" res))}))
+    (merge {:data {:title (:title class)}
+            :on-complete
+                  (fn [res] )}
+           (if (contains? class :id)
+             {:method :put
+              :url    (str "class/" (:id class) "/update")}
+             {:method :post
+              :url    "class"}))
+    ))
 
 (defn handle-change [e data edit-key owner]
   (om/transact! data edit-key (fn [_] (.. e -target -value))))
@@ -75,26 +78,33 @@
                        :onClick #(om/set-state! owner :editing true)}
                   "Edit"))))))
 
+(defn fetch-classes [data owner]
+  (edn-xhr
+          {:method      :get
+           :url         "class"
+           :on-complete #(om/transact! data :classes (fn [_] (do (println %) %)))}))
+
 (defn classes-view [data owner]
   (reify
     om/IWillMount
     (will-mount [_]
-      (edn-xhr
-        {:method      :get
-         :url         "classes"
-         :on-complete #(om/transact! data :classes (fn [_] (do (println %) %)))}))
+      (fetch-classes data owner))
     om/IRender
     (render [_]
-      (dom/div #js {:id "classes"}
-               (dom/h2 nil "Classes")
-               (apply dom/ul nil
-                      (map
-                        (fn [class]
-                          (let [id (:id class)]
+      (do
+        (println data)
+        (dom/div #js {:id "classes"}
+                 (dom/h2 nil "Classes")
+                 (apply dom/ul nil
+                        (map
+                          (fn [class]
                             (om/build editable class
                                       {:opts {:edit-key :title
-                                              :on-edit  #(on-edit id %)}})))
-                        (:classes data)))))))
+                                              :on-edit  #(on-edit data class)}}))
+                          (:classes data)))
+                 (dom/button
+                   #js {:onClick #(om/transact! data :classes (fn [data] (conj data {:title "Blank"})))}
+                   "New"))))))
 
 (om/root
   (fn [data owner]
@@ -106,4 +116,4 @@
                  (om/build missiles/graph-view data))
         )))
   app-state
-  {:target (.getElementById js/document "classes")})
+  {:target (.getElementById js/document "formz")})
