@@ -16,7 +16,9 @@
                  [compojure "1.3.1"]
                  [com.datomic/datomic-free "0.9.5130" :exclusions [joda-time]]
                  [ring/ring-jetty-adapter "1.2.2"]
-                 [environ "0.5.0"]]
+                 [environ "0.5.0"]
+                 [org.clojure/java.jdbc "0.3.2"]
+                 [org.postgresql/postgresql "9.3-1100-jdbc41"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-figwheel "0.2.9"]

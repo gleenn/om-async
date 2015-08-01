@@ -43,7 +43,7 @@
   (edn-xhr
     {:method :put
      :url    (str "class/" id "/update")
-     :data   {:class/title title}
+     :data   {:title title}
      :on-complete
              (fn [res]
                (println "server response:" res))}))
@@ -90,9 +90,9 @@
                (apply dom/ul nil
                       (map
                         (fn [class]
-                          (let [id (:class/id class)]
+                          (let [id (:id class)]
                             (om/build editable class
-                                      {:opts {:edit-key :class/title
+                                      {:opts {:edit-key :title
                                               :on-edit  #(on-edit id %)}})))
                         (:classes data)))))))
 
