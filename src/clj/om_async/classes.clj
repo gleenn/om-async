@@ -2,11 +2,12 @@
   (:require
     [clojure.java.jdbc :as sql]
     [om-async.util :as util]
+    [environ.core :refer [env]]
     ;[clojure.java.io :as io]
     ;[clojure.edn :as edn]
     ))
 
-(def url "postgresql://localhost:5432/clojure")
+(def url (or (env :database-url) "postgresql://localhost:5432/clojure"))
 
 (defn add-class [params]
   (if-let [id (first (sql/insert! url :classes params))]
