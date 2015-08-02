@@ -34,6 +34,7 @@
   :uberjar-name "missiles.jar"
   :profiles {:production {:env {:production true}}}
   :main om-async.core
+  :aot [om-async.core]
 
   :source-paths ["src/clj" "src/cljs"]
   :resource-paths ["resources"]
