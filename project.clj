@@ -26,7 +26,7 @@
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-figwheel "0.3.7"]
-            [lein-garden "0.2.6"]
+            ;[lein-garden "0.2.6"]
             [environ/environ.lein "0.2.1"]]
   :hooks [environ.leiningen.hooks
           leiningen.cljsbuild]
@@ -59,15 +59,16 @@
                        ;                :pretty-print  false}}
                        ]}
 
-  :garden {:builds [{;; Optional name of the build:
-                       :id "screen"
-                       ;; Source paths where the stylesheet source code is
-                       :source-paths ["src/css"]
-                       ;; The var containing your stylesheet:
-                       :stylesheet om-async.screen/screen
-                       ;; Compiler flags passed to `garden.core/css`:
-                       :compiler {;; Where to save the file:
-                                  :output-to "resources/public/css/screen.css"
-                                  ;; Compress the output?
-                                  :pretty-print? false}}]}
-  :prep-tasks [["garden" "once"]])
+  ;:garden {:builds [{;; Optional name of the build:
+  ;                     :id "screen"
+                       ; Source paths where the stylesheet source code is
+                       ;:source-paths ["src/css"]
+                       ; The var containing your stylesheet:
+                       ;:stylesheet om-async.screen/screen
+                       ; Compiler flags passed to `garden.core/css`:
+                       ;:compiler {;; Where to save the file:
+                       ;           :output-to "resources/public/css/screen.css"
+                                  ; Compress the output?
+                                  ;:pretty-print? false}}]}
+  ;:prep-tasks [["garden" "once"]]
+)
