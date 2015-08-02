@@ -23,6 +23,6 @@
       (util/generate-response {:status 404}))))
 
 (defn all []
-  (let [classes (sql/query url ["select * from classes"])]
+  (let [classes (sql/query url ["select id, title from classes"])]
     (println classes)
     (vec classes)))

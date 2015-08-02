@@ -13,16 +13,20 @@
                  [org.clojure/clojurescript "1.7.28"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.omcljs/om "0.9.0"]
+                 [garden "1.2.5"]
                  [ring "1.3.2"]
                  [compojure "1.3.1"]
                  [com.datomic/datomic-free "0.9.5130" :exclusions [joda-time]]
                  [ring/ring-jetty-adapter "1.2.2"]
                  [environ "0.5.0"]
                  [org.clojure/java.jdbc "0.3.2"]
-                 [org.postgresql/postgresql "9.3-1100-jdbc41"]]
+                 [org.postgresql/postgresql "9.3-1100-jdbc41"]
+                 ;[sablono "0.3.5"]
+                 ]
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-figwheel "0.3.7"]
+            [lein-garden "0.2.6"]
             [environ/environ.lein "0.2.1"]]
   :hooks [environ.leiningen.hooks
           leiningen.cljsbuild]
@@ -53,4 +57,17 @@
                        ;                :asset-path    "js/out"
                        ;                :optimizations :advanced
                        ;                :pretty-print  false}}
-                       ]})
+                       ]}
+
+  :garden {:builds [{;; Optional name of the build:
+                       :id "screen"
+                       ;; Source paths where the stylesheet source code is
+                       :source-paths ["src/css"]
+                       ;; The var containing your stylesheet:
+                       :stylesheet om-async.screen/screen
+                       ;; Compiler flags passed to `garden.core/css`:
+                       :compiler {;; Where to save the file:
+                                  :output-to "resources/public/css/screen.css"
+                                  ;; Compress the output?
+                                  :pretty-print? false}}]}
+  :prep-tasks [["garden" "once"]])

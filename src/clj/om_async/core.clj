@@ -50,7 +50,7 @@
            (GET "/class" [] (util/generate-response (classes/all)))
            (POST "/class"
                  {params :params edn-body :edn-body}
-                 (classes/add-class edn-body))
+             (classes/add-class edn-body))
            (PUT "/class/:id/update"
                 {params :params edn-body :edn-body}
              (classes/update-class (:id params) edn-body))

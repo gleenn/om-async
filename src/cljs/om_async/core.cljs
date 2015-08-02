@@ -3,7 +3,9 @@
             [goog.events :as events]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [om-async.missiles :as missiles])
+            [om-async.missiles :as missiles]
+            [om-async.histogram :as histogram]
+            )
   (:import [goog.net XhrIo]
            goog.net.EventType
            [goog.events EventType]))
@@ -43,10 +45,10 @@
   (edn-xhr
     (merge {:data {:title (:title class)}
             :on-complete
-                  (fn [res] )}
-           (if (contains? class :id)
+                  (fn [res] (println res))}
+           (if-let [id (get class :id)]
              {:method :put
-              :url    (str "class/" (:id class) "/update")}
+              :url    (str "class/" id "/update")}
              {:method :post
               :url    "class"}))
     ))
@@ -80,38 +82,37 @@
 
 (defn fetch-classes [data owner]
   (edn-xhr
-          {:method      :get
-           :url         "class"
-           :on-complete #(om/transact! data :classes (fn [_] (do (println %) %)))}))
+    {:method      :get
+     :url         "class"
+     :on-complete #(om/transact! data :classes (fn [_] (do (println (str "replacing with " %)) %)))}))
 
 (defn classes-view [data owner]
   (reify
-    om/IWillMount
-    (will-mount [_]
-      (fetch-classes data owner))
     om/IRender
     (render [_]
-      (do
-        (println data)
-        (dom/div #js {:id "classes"}
-                 (dom/h2 nil "Classes")
-                 (apply dom/ul nil
-                        (map
-                          (fn [class]
-                            (om/build editable class
-                                      {:opts {:edit-key :title
-                                              :on-edit  #(on-edit data class)}}))
-                          (:classes data)))
-                 (dom/button
-                   #js {:onClick #(om/transact! data :classes (fn [data] (conj data {:title "Blank"})))}
-                   "New"))))))
+      (dom/div #js {:id "classes"}
+               (dom/h2 nil "Classes")
+               (apply dom/ul nil
+                      (map
+                        (fn [class]
+                          (om/build editable class
+                                    {:opts {:edit-key :title
+                                            :on-edit  #(on-edit data class)}}))
+                        (:classes data)))
+               (dom/button
+                 #js {:onClick #(om/transact! data :classes (fn [data] (conj data {:title "Blank"})))}
+                 "New")))))
 
 (om/root
   (fn [data owner]
     (reify
+      om/IWillMount
+          (will-mount [_]
+            (fetch-classes data owner))
       om/IRender
       (render [this]
         (dom/div nil
+                 (om/build histogram/histogram-view data)
                  (om/build classes-view data)
                  (om/build missiles/graph-view data))
         )))
