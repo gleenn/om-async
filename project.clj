@@ -21,6 +21,7 @@
                  [environ "0.5.0"]
                  [org.clojure/java.jdbc "0.3.2"]
                  [org.postgresql/postgresql "9.3-1100-jdbc41"]
+                 [org.clojure/tools.logging "0.3.1"]
                  ;[sablono "0.3.5"]
                  ]
 
