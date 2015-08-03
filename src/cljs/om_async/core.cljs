@@ -43,7 +43,7 @@
 
 (defn upsert-class [data class]
   (edn-xhr
-    (merge {:data {:title (:title class)}
+    (merge {:data class
             :on-complete
                   (fn [res] (println (str "oncomplete " res)))}
            (if-let [id (get class :id)]
