@@ -47,11 +47,11 @@
 
 (defroutes routes
            (GET "/" [] (index))
-           (GET "/class" [] (util/generate-response (classes/all)))
-           (POST "/class"
+           (GET "/classes" [] (util/generate-response (classes/all)))
+           (POST "/classes"
                  {params :params edn-body :edn-body}
              (classes/add-class edn-body))
-           (PUT "/class/:id/update"
+           (PUT "/classes/:id"
                 {params :params edn-body :edn-body}
              (classes/update-class (:id params) edn-body))
            (route/files "/" {:root "resources/public"}))

@@ -7,11 +7,11 @@
     ;[clojure.edn :as edn]
     ))
 
-(def url (or (env :database-url) "postgresql://localhost:5432/clojure"))
+(def url (or (env :database-url) "postgresql://localhost:5432/glenn"))
 
 (defn add-class [params]
   (if-let [id (first (sql/insert! url :classes params))]
-    (util/generate-response {:status :ok :id id})
+    (util/generate-response {:status :ok :id (:id id)})
     (util/generate-response {:status 400})))
 
 (defn update-class [id params]

@@ -45,12 +45,12 @@
   (edn-xhr
     (merge {:data {:title (:title class)}
             :on-complete
-                  (fn [res] (println res))}
+                  (fn [res] (println (str "oncomplete " res)))}
            (if-let [id (get class :id)]
              {:method :put
-              :url    (str "class/" id "/update")}
+              :url    (str "classes/" id)}
              {:method :post
-              :url    "class"}))
+              :url    "classes"}))
     ))
 
 (defn handle-change [e data edit-key owner]
@@ -83,7 +83,7 @@
 (defn fetch-classes [data owner]
   (edn-xhr
     {:method      :get
-     :url         "class"
+     :url         "classes"
      :on-complete #(om/transact! data :classes (fn [_] (do (println (str "replacing with " %)) %)))}))
 
 (defn classes-view [data owner]
