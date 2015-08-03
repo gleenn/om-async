@@ -50,10 +50,14 @@
            (GET "/classes" [] (util/generate-response (classes/all)))
            (POST "/classes"
                  {params :params edn-body :edn-body}
-             (classes/add-class edn-body))
+             (try
+               (classes/add-class edn-body)
+               (catch Exception e (println (str e)))))
            (PUT "/classes/:id"
                 {params :params edn-body :edn-body}
-             (classes/update-class (:id params) edn-body))
+             (try
+               (classes/update-class (:id params) edn-body)
+               (catch Exception e (println (str e)))))
            (route/files "/" {:root "resources/public"}))
 
 (defn read-inputstream-edn [input]
