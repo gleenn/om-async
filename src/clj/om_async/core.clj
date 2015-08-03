@@ -24,12 +24,14 @@
                  {params :params edn-body :edn-body}
              (try
                (classes/add-class edn-body)
-               (catch Exception e (println (str e)))))
+               (catch Exception e (do (println (str e))
+                                      (util/generate-response {:status 569})))))
            (PUT "/classes/:id"
                 {params :params edn-body :edn-body}
              (try
                (classes/update-class (:id params) edn-body)
-               (catch Exception e (println (str e)))))
+               (catch Exception e (do (println (str e))
+                                      (util/generate-response {:status 569})))))
            (route/files "/" {:root "resources/public"}))
 
 (defn read-inputstream-edn [input]
