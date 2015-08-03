@@ -7,22 +7,26 @@
     ;[clojure.edn :as edn]
     ))
 
-(def url (or (env :database-url) "postgresql://localhost:5432/glenn"))
+(def db-url (or (env :database-url) "postgresql://localhost:5432/glenn"))
 
 (defn add-class [params]
-  (if-let [result (first (sql/insert! url :classes params))]
-    (util/generate-response {:status :ok :id (:id result)})
-    (util/generate-response {:status 400})))
+  (do
+    (println (str "params for add-class " params))
+    (if-let [result (first (sql/insert! db-url :classes params))]
+      (util/generate-response {:status :ok :id (:id result)})
+      (util/generate-response {:status 400}))))
 
 (defn update-class [id params]
-  (let [id (Integer/parseInt id)]
-    (if-let [class (first (sql/query url ["select * from classes where id = ?" id]))]
-      (if-let [id (sql/update! url :classes (dissoc (merge class params) :id) ["id = ?" id])]
-        (util/generate-response {:status :ok :id id})
-        (util/generate-response {:status 400}))
-      (util/generate-response {:status 404}))))
+  (do
+    (println (str "params for update-class " params))
+    (let [id (Integer/parseInt id)]
+      (if-let [class (first (sql/query db-url ["select * from classes where id = ?" id]))]
+        (if-let [id (sql/update! db-url :classes (dissoc (merge class params) :id) ["id = ?" id])]
+          (util/generate-response {:status :ok :id id})
+          (util/generate-response {:status 400}))
+        (util/generate-response {:status 404})))))
 
 (defn all []
-  (let [classes (sql/query url ["select id, title from classes"])]
+  (let [classes (sql/query db-url ["select id, title from classes"])]
     (println classes)
     (vec classes)))

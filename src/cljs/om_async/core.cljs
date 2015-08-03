@@ -41,7 +41,7 @@
   (om/set-state! owner :editing false)
   (cb text))
 
-(defn on-edit [data class]
+(defn upsert-class [data class]
   (edn-xhr
     (merge {:data {:title (:title class)}
             :on-complete
@@ -52,6 +52,9 @@
              {:method :post
               :url    "classes"}))
     ))
+
+(defn insert-blank-class [data]
+  (om/transact! data :classes (fn [data] (conj data {:title "Blank"}))))
 
 (defn handle-change [e data edit-key owner]
   (om/transact! data edit-key (fn [_] (.. e -target -value))))
@@ -97,10 +100,10 @@
                         (fn [class]
                           (om/build editable class
                                     {:opts {:edit-key :title
-                                            :on-edit  #(on-edit data class)}}))
+                                            :on-edit  #(upsert-class data class)}}))
                         (:classes data)))
                (dom/button
-                 #js {:onClick #(om/transact! data :classes (fn [data] (conj data {:title "Blank"})))}
+                 #js {:onClick #(insert-blank-class data)}
                  "New")))))
 
 (om/root
