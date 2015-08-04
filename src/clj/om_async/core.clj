@@ -21,17 +21,17 @@
            (GET "/" [] (index))
            (GET "/classes" [] (util/generate-response (classes/all)))
            (POST "/classes"
-                 {params :params edn-body :edn-body}
+                 {edn-body :edn-body}
              (try
                (classes/add-class edn-body)
                (catch Exception e (do (println (str e))
-                                      (util/generate-response {:status 569})))))
+                                      (util/generate-response {:status 569 :exception (str e)})))))
            (PUT "/classes/:id"
                 {params :params edn-body :edn-body}
              (try
                (classes/update-class (:id params) edn-body)
                (catch Exception e (do (println (str e))
-                                      (util/generate-response {:status 569})))))
+                                      (util/generate-response {:status 569 :exception (str e)})))))
            (route/files "/" {:root "resources/public"}))
 
 (defn read-inputstream-edn [input]
@@ -52,5 +52,5 @@
       parse-edn-body))
 
 (defn -main [& [port]]
-  (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty (site #'routes) {:port port :join? false})))
+  (let [port (Integer. (or port (env :port) 3449))]
+    (jetty/run-jetty (site #'handler) {:port port :join? false})))

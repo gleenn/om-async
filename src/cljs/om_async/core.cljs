@@ -48,9 +48,9 @@
                   (fn [res] (println (str "oncomplete " res)))}
            (if-let [id (get class :id)]
              {:method :put
-              :url    (str "classes/" id)}
+              :url    (str "/classes/" id)}
              {:method :post
-              :url    "classes"}))
+              :url    "/classes"}))
     ))
 
 (defn insert-blank-class [data]
@@ -110,8 +110,8 @@
   (fn [data owner]
     (reify
       om/IWillMount
-          (will-mount [_]
-            (fetch-classes data owner))
+      (will-mount [_]
+        (fetch-classes data owner))
       om/IRender
       (render [this]
         (dom/div nil

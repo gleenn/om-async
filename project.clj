@@ -17,6 +17,7 @@
                  [ring "1.3.2"]
                  [compojure "1.3.1"]
                  [ring/ring-jetty-adapter "1.2.2"]
+                 [ring/ring-defaults "0.1.5"]
                  [environ "0.5.0"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [org.postgresql/postgresql "9.4-1200-jdbc41"]
